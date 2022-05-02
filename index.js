@@ -66,7 +66,7 @@ const logicABC = function (path) {
 
   for (let i = 0; i < buttons.length; i++) {
     buttons[i].addEventListener('click', function () {
-      triger(this, path + this.innerText);
+      triger(this, path + this.innerText.toLowerCase());
     });
   }
   for (let i = 0; i < buttonsNum.length; i++) {
