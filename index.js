@@ -10,19 +10,15 @@ const numbers = function () {
   return num;
 };
 
-let path = '';
+let path = 'abclong/';
 const rows = [10, 9, 7];
 const numrows = [6, 5];
-const rowsTag = document.querySelectorAll('.row');
-const setTag = document.querySelectorAll('.set');
+const rowsTag = document.getElementsByClassName('row');
+const setTag = document.getElementsByClassName('set');
 
 const cleanFunc = function () {
-  for (let j = 0; j < setTag.length; j++) {
-    setTag[j].innerHTML = '';
-  }
-  for (let j = 0; j < rowsTag.length; j++) {
-    rowsTag[j].innerHTML = '';
-  }
+  Array.from(rowsTag).forEach(el => (el.innerHTML = ''));
+  Array.from(setTag).forEach(el => (el.innerHTML = ''));
 };
 const num = function () {
   const num = numbers();
@@ -54,28 +50,21 @@ const abc = function (arr) {
   }
 };
 abc(new Array(...qwerty).sort());
+
 const triger = function (arg1, arg2) {
   arg1.classList.add('pressed');
   setTimeout(() => arg1.classList.remove('pressed'), 100);
   new Audio(`sounds/${arg2}.mp3`).play();
 };
 
-const logicABC = function (path) {
-  const buttonsNum = document.querySelectorAll('.num');
-  const buttons = document.querySelectorAll('.drum');
-
-  for (let i = 0; i < buttons.length; i++) {
-    buttons[i].addEventListener('click', function () {
-      triger(this, path + this.innerText.toLowerCase());
-    });
-  }
-  for (let i = 0; i < buttonsNum.length; i++) {
-    buttonsNum[i].addEventListener('click', function () {
-      triger(this, this.innerText);
-    });
-  }
+const logicABC = function () {
+  document.body.addEventListener('click', function (e) {
+    e.target.classList.contains('drum') &&
+      triger(e.target, path + e.target.innerText.toLowerCase());
+    e.target.classList.contains('num') && triger(e.target, e.target.innerText);
+  });
 };
-logicABC('abclong/');
+logicABC();
 
 document.querySelector('.btnChange').addEventListener('click', function () {
   if (this.classList.contains('abc')) {
@@ -92,7 +81,7 @@ document.querySelector('.btnChange').addEventListener('click', function () {
     }
     this.insertAdjacentHTML('beforeend', `<span>🏳‍🌈</span>`);
     abc(new Array(...qwerty));
-    logicABC('abc/');
+    path = 'abc/';
   } else if (this.classList.contains('qwerty')) {
     this.classList.remove('qwerty');
     this.classList.add('numbers');
@@ -107,7 +96,7 @@ document.querySelector('.btnChange').addEventListener('click', function () {
     }
     this.insertAdjacentHTML('beforeend', `<span>🏳‍🌈</span>`);
     num();
-    logicABC('');
+    path = '';
   } else if (this.classList.contains('numbers')) {
     this.classList.remove('numbers');
     this.classList.add('abc');
@@ -122,34 +111,20 @@ document.querySelector('.btnChange').addEventListener('click', function () {
     }
     this.insertAdjacentHTML('beforeend', `<span>🏳‍🌈</span>`);
     abc(new Array(...qwerty).sort());
-    logicABC('abclong/');
+    path = 'abclong/';
   } else console.log('Something Wrong');
   triger(this, 'yellow');
 });
 
 document.addEventListener('keypress', e => {
-  let course = e.key;
-  const oneMore = document.querySelector('.btnChange').innerText;
-  console.log(oneMore);
-  switch (oneMore) {
-    case 'ABC🏳‍🌈':
-      path = 'abclong/';
-      break;
-    case 'QWERTY🏳‍🌈':
-      path = 'abc/';
-      break;
-    case 'NUMBERS🏳‍🌈':
-      path = '';
-      course = 'Digit' + e.key;
-      break;
-    default:
-      console.log('Something Wrong!');
-      break;
-  }
-  // console.log(findKeypress(course).innerText);
-  console.log(course);
-  console.log(document.getElementsByClassName(course)[0]?.innerText);
-  e.key.toUpperCase() === document.getElementsByClassName(course)[0]?.innerText
-    ? triger(document.getElementsByClassName(course)[0], path + e.key)
-    : '';
+  e.key.toUpperCase() ===
+    document.getElementsByClassName(
+      Number.isInteger(+e.key) ? 'Digit' + e.key : e.key
+    )[0]?.innerText &&
+    triger(
+      document.getElementsByClassName(
+        Number.isInteger(+e.key) ? 'Digit' + e.key : e.key
+      )[0],
+      path + e.key
+    );
 });
