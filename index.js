@@ -58,13 +58,10 @@ const triger = function (arg1, arg2) {
 };
 
 const logicABC = function () {
-  document.body.addEventListener('click', function (e) {
-    Promise.resolve().then(res => {
-      e.target.classList.contains('drum') &&
-        triger(e.target, path + e.target.innerText.toLowerCase());
-      e.target.classList.contains('num') &&
-        triger(e.target, e.target.innerText);
-    });
+  document.body.addEventListener('mouseover', function (e) {
+    e.target.classList.contains('drum') &&
+      triger(e.target, path + e.target.innerText.toLowerCase());
+    e.target.classList.contains('num') && triger(e.target, e.target.innerText);
   });
 };
 logicABC();
